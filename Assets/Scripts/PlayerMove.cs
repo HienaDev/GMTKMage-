@@ -10,12 +10,21 @@ public class PlayerMove : MonoBehaviour
     // Player Variables (Colliders, speed, rigidbody, animations)
 
     [SerializeField, Header("Player")] private float moveSpeed = 100f;
-    [SerializeField] private Collider2D groundCollider;
-    [SerializeField] private Collider2D airCollider;
+    [SerializeField] private float crouchedMoveSpeed = 50f;
+    [SerializeField] private BoxCollider2D groundCollider;
+    [SerializeField] private CapsuleCollider2D airCollider;
     private float defaultSpeed;
     private Rigidbody2D rb;
     private Vector2 currentVelocity;
     private Animator animator;
+
+    private bool crouched = false;
+
+    private float colliderNormalOffset = -1.5f;
+    private float colliderNormalSize = 25f;
+
+    private float colliderCrouchedOffset = -5f;
+    private float colliderCrouchedSize = 17.6f;
 
     // Variables to check if the player is on the ground
     [SerializeField, Header("\nGroundCheck")] private Transform groundCheck;
@@ -56,13 +65,36 @@ public class PlayerMove : MonoBehaviour
 
         currentVelocity = rb.velocity;
 
-        animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
+        
 
         animator.SetFloat("VelocityY", currentVelocity.y);
 
-        currentVelocity.x = Input.GetAxis("Horizontal") * moveSpeed;
+        animator.SetBool("crouched", crouched);
 
 
+        if(crouched)
+        {
+            currentVelocity.x = Input.GetAxis("Horizontal") * crouchedMoveSpeed;
+
+            groundCollider.size = new Vector2(groundCollider.size.x, colliderCrouchedSize);
+            groundCollider.offset = new Vector2(groundCollider.offset.x, colliderCrouchedOffset);
+
+            airCollider.size = new Vector2(airCollider.size.x, colliderCrouchedSize);
+            airCollider.offset = new Vector2(airCollider.offset.x, colliderCrouchedOffset);
+        }
+        else { 
+            currentVelocity.x = Input.GetAxis("Horizontal") * moveSpeed;
+
+            groundCollider.size = new Vector2(groundCollider.size.x, colliderNormalSize);
+            groundCollider.offset = new Vector2(groundCollider.offset.x, colliderNormalOffset);
+
+            airCollider.size = new Vector2(airCollider.size.x, colliderNormalSize);
+            airCollider.offset = new Vector2(airCollider.offset.x, colliderNormalOffset);
+        }
+
+        animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
+
+        Debug.Log(Mathf.Abs(currentVelocity.x));
 
         if (grounded && currentVelocity.y <= 1e-3)
         {
@@ -98,6 +130,15 @@ public class PlayerMove : MonoBehaviour
         {
             rb.gravityScale = defaultGravity;
             lastJumpTime = 0;
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            crouched = true;
+        }
+        else
+        {
+            crouched = false;
         }
 
 
@@ -162,4 +203,6 @@ public class PlayerMove : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position - transform.right * groundCheckSeparation, groundCheckRadius);
         }
     }
+
+    
 }
