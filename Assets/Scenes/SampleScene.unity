@@ -440,7 +440,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -575,7 +575,7 @@ GameObject:
   - component: {fileID: 537467561}
   - component: {fileID: 537467560}
   m_Layer: 0
-  m_Name: _Idle_0
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -796,7 +796,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -1189,7 +1189,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -1322,7 +1322,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -1455,7 +1455,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -1656,7 +1656,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196b2e1c4724a744ebea91b5f8105601, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -1712,7 +1712,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -1.5}
-  m_Size: {x: 12.11275, y: 25.06322}
+  m_Size: {x: 12.11275, y: 25}
   m_Direction: 0
 --- !u!61 &1566413033
 BoxCollider2D:
@@ -1738,7 +1738,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12.112752, y: 25.063217}
+  m_Size: {x: 12.112752, y: 25}
   m_EdgeRadius: 0
 --- !u!50 &1566413034
 Rigidbody2D:
@@ -1773,7 +1773,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28909b66e3f55734da7f00a20edc64cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 200
+  moveSpeed: 100
+  crouchedMoveSpeed: 50
   groundCollider: {fileID: 1566413033}
   airCollider: {fileID: 1566413032}
   groundCheck: {fileID: 1379094241}
