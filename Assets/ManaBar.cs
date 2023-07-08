@@ -8,6 +8,7 @@ public class ManaBar : MonoBehaviour
     // Start is called before the first frame update
     private WizardController checkMana;
     private float mana;
+    private float maxMana;
 
     private Image manaBar;
     
@@ -25,9 +26,10 @@ public class ManaBar : MonoBehaviour
     void Update()
     {
         mana = checkMana.Mana;
+        maxMana = checkMana.MaxMana;
 
  
-        manaBar.fillAmount = mana / 1f;
+        manaBar.fillAmount = mana / maxMana;
 
     }
 }

@@ -2942,6 +2942,7 @@ MonoBehaviour:
   traps:
   - {fileID: 6612252015694882501, guid: e78af50d87d190e4091ce90255e5d0ef, type: 3}
   Mana: 1
+  MaxMana: 0
 --- !u!4 &689389216
 Transform:
   m_ObjectHideFlags: 0
@@ -16100,7 +16101,7 @@ AudioSource:
   m_GameObject: {fileID: 1149737975}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 951ee5364dbd7ce4c9140f147ab0ee35, type: 2}
+  OutputAudioMixerGroup: {fileID: 5819517000003331785, guid: 35f90c134ca2dab4ab5d8cc62f30ac6b, type: 2}
   m_audioClip: {fileID: 8300000, guid: 2010edb11f5d8e243a7fe957c3568246, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
