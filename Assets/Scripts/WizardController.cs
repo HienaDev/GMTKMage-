@@ -18,10 +18,11 @@ public class WizardController : MonoBehaviour
     float ManaBaseline = 0.3f;
 
     public float Mana;
+    public float MaxMana;
     float ManaStart;
     float ManaSpent;
 
-
+    int friends = 0;
 
     LineRenderer line;
 
@@ -35,11 +36,22 @@ public class WizardController : MonoBehaviour
         lastMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         Mana = 1f;
+        MaxMana = 1f;
+
         ManaStart = 1f;
         ManaSpent = 0f;
 
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
+    }
+
+    public void manaUpgrade()
+    {
+        MaxMana += 0.5f;
+    }
+
+    public void friendUpgrade() {
+        friends += 1;
     }
 
     // Update is called once per frame
@@ -70,7 +82,16 @@ public class WizardController : MonoBehaviour
             }
             else
             {
-                controller.fireSpell(dragAnchor, momentum, ManaSpent);
+                for(int i = 0; i<friends; i++)
+                {
+                    GameObject frin = Instantiate(activeTrap, this.transform);
+                    Trap frinControl = frin.GetComponent<Trap>();
+                    Vector3 randpoint = Random.onUnitSphere;
+                    randpoint.z = dragAnchor.z;
+                    Vector3 friendpoint = dragAnchor + (randpoint * 10 * friends);
+                    frinControl.fireSpell(friendpoint , dragPoint - friendpoint, 0.25f*ManaSpent, true);
+                }
+                controller.fireSpell(dragAnchor, momentum, ManaSpent, false);
             }
             
             
@@ -115,7 +136,7 @@ public class WizardController : MonoBehaviour
         if (ManaStart < ManaBaseline)
         {
             Mana += Time.deltaTime * ManaRegen;
-            Mana = Mathf.Clamp(Mana, 0f, 1f);
+            Mana = Mathf.Clamp(Mana, 0f, MaxMana);
             return;
         }
 
@@ -131,7 +152,7 @@ public class WizardController : MonoBehaviour
         else
         {
             Mana += Time.deltaTime * ManaRegen;
-            Mana = Mathf.Clamp(Mana, 0f, 1f);
+            Mana = Mathf.Clamp(Mana, 0f, MaxMana);
         }        
     }
 

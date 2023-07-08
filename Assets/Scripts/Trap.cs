@@ -21,5 +21,5 @@ public abstract class Trap : MonoBehaviour
     {
     }
 
-    public abstract void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld);
+    public abstract void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld, bool friend);
 }

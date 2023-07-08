@@ -30,7 +30,7 @@ public class LightningTrap : Trap
         processSpell();
     }
 
-    public override void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld)
+    public override void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld, bool friend)
     {
         timeHeld = Mathf.Pow(0.1f+timeHeld, 2);
         beamTime = timeHeld; 
@@ -41,6 +41,10 @@ public class LightningTrap : Trap
         spawnTime = Time.time;
         beam.SetActive(false);
         sprite.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + timeHeld);
+        if (friend)
+        {
+            sprite.transform.localScale = sprite.transform.localScale / 2f;
+        }
     }
 
     void processSpell() {
