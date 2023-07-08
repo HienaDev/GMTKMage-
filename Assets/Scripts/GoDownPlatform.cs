@@ -12,6 +12,8 @@ public class GoDownPlatform : MonoBehaviour
     private float platformWasReversed;
     private bool platformReversed = false;
 
+
+
     void Start()
     {
         platforms = GetComponent<PlatformEffector2D>();

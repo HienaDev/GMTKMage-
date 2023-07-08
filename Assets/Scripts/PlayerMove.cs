@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class PlayerMove : MonoBehaviour
     private Vector2 currentVelocity;
     private Animator animator;
 
-    private bool crouched = false;
+    public bool Crouched { get; private set; }
 
     private float colliderNormalOffset = -1.5f;
     private float colliderNormalSize = 25f;
@@ -31,7 +32,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 2f;
     [SerializeField] private float groundCheckSeparation;
     [SerializeField] private LayerMask groundMask;
-    private bool grounded;
+    public bool Grounded { get; private set; }
     private float leftGround;
 
     // Variables related to the player's jump
@@ -44,6 +45,18 @@ public class PlayerMove : MonoBehaviour
     private float lastJumpTime;
     private int nJumps;
 
+    // Trail variables
+    [SerializeField, Header("\nTrail")] private float trailTime;
+    [SerializeField] private GameObject fader;
+    private bool isTrailing = true;
+    private float timeCounter = 0f;
+
+    // Roll variables
+    [SerializeField, Header("\nRoll")] private float dashingPower;
+    [SerializeField] private float dashingTime;
+    [SerializeField] private float dashingCooldown;
+    private bool canDash = true;
+    public bool IsDashing { get; private set; }
 
     // Start is called before the first frame update
     private void Start()
@@ -53,49 +66,60 @@ public class PlayerMove : MonoBehaviour
         defaultSpeed = moveSpeed;
         animator = GetComponentInChildren<Animator>();
 
+        IsDashing = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+
         DetectGround();
 
-        groundCollider.enabled = grounded;
-        airCollider.enabled = !grounded;
+        if(!IsDashing)
+        { 
+            groundCollider.enabled = Grounded;
+            airCollider.enabled = !Grounded;
+        }
 
         currentVelocity = rb.velocity;
 
-        
+        isTrailing = IsDashing;
 
         animator.SetFloat("VelocityY", currentVelocity.y);
 
-        animator.SetBool("crouched", crouched);
+        animator.SetBool("crouched", Crouched);
 
+        if (!IsDashing)
+        { 
+            if(Crouched)
+            {
+                currentVelocity.x = Input.GetAxis("Horizontal") * crouchedMoveSpeed;
 
-        if(crouched)
-        {
-            currentVelocity.x = Input.GetAxis("Horizontal") * crouchedMoveSpeed;
+                groundCollider.size = new Vector2(groundCollider.size.x, colliderCrouchedSize);
+                groundCollider.offset = new Vector2(groundCollider.offset.x, colliderCrouchedOffset);
 
-            groundCollider.size = new Vector2(groundCollider.size.x, colliderCrouchedSize);
-            groundCollider.offset = new Vector2(groundCollider.offset.x, colliderCrouchedOffset);
+            }
+            else { 
+                currentVelocity.x = Input.GetAxis("Horizontal") * moveSpeed;
 
-            airCollider.size = new Vector2(airCollider.size.x, colliderCrouchedSize);
-            airCollider.offset = new Vector2(airCollider.offset.x, colliderCrouchedOffset);
+                groundCollider.size = new Vector2(groundCollider.size.x, colliderNormalSize);
+                groundCollider.offset = new Vector2(groundCollider.offset.x, colliderNormalOffset);
+
+            }
         }
-        else { 
-            currentVelocity.x = Input.GetAxis("Horizontal") * moveSpeed;
-
-            groundCollider.size = new Vector2(groundCollider.size.x, colliderNormalSize);
-            groundCollider.offset = new Vector2(groundCollider.offset.x, colliderNormalOffset);
-
-            airCollider.size = new Vector2(airCollider.size.x, colliderNormalSize);
-            airCollider.offset = new Vector2(airCollider.offset.x, colliderNormalOffset);
-        }
+ 
 
         animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
 
 
-        if (grounded && currentVelocity.y <= 1e-3)
+        if (Grounded && currentVelocity.y <= 1e-3)
         {
             leftGround = Time.time;
 
@@ -113,7 +137,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Jump") && (nJumps > 0) && !crouched)
+        if (Input.GetButtonDown("Jump") && (nJumps > 0) && !Crouched)
         {
             currentVelocity.y = jumpSpeed;
             lastJumpTime = Time.time;
@@ -131,13 +155,32 @@ public class PlayerMove : MonoBehaviour
             lastJumpTime = 0;
         }
 
+        if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash && Grounded)
+        {
+            animator.SetTrigger("Roll");
+            StartCoroutine(Dash());
+        }
+
         if (Input.GetKey(KeyCode.S))
         {
-            crouched = true;
+            Crouched = true;
         }
         else
         {
-            crouched = false;
+            Crouched = false;
+        }
+
+        if (isTrailing)
+        {
+            timeCounter += Time.deltaTime;
+            if (timeCounter >= trailTime)
+            {
+                timeCounter = 0;
+                GameObject f = Instantiate(fader, new Vector3(transform.position.x, transform.position.y, transform.position.z + 1), transform.rotation) as GameObject;
+                SpriteRenderer faderSprite = f.GetComponent<SpriteRenderer>();
+                faderSprite.color = new Color(255f/255f, 200f/255f, 0, 0.4f);
+                faderSprite.sprite = GetComponentInChildren<SpriteRenderer>().sprite;
+            }
         }
 
 
@@ -145,6 +188,7 @@ public class PlayerMove : MonoBehaviour
 
 
         FlipPlayer();
+
     }
 
     private void FlipPlayer()
@@ -172,24 +216,40 @@ public class PlayerMove : MonoBehaviour
     {
         Collider2D collider = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
-        if (collider != null) grounded = true;
+        if (collider != null) Grounded = true;
         else
         {
             collider = Physics2D.OverlapCircle(groundCheck.position + transform.right * groundCheckSeparation, groundCheckRadius, groundMask);
-            if (collider != null) grounded = true;
+            if (collider != null) Grounded = true;
             else
             {
                 collider = Physics2D.OverlapCircle(groundCheck.position - transform.right * groundCheckSeparation, groundCheckRadius, groundMask);
-                if (collider != null) grounded = true;
+                if (collider != null) Grounded = true;
                 else
                 {
-                    grounded = false;
+                    Grounded = false;
                 }
             }
         }
 
     }
 
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        IsDashing = true;
+        currentVelocity = new Vector2(transform.right.x * defaultSpeed * dashingPower, currentVelocity.y);
+
+
+        yield return new WaitForSeconds(dashingTime);
+
+        IsDashing = false;
+
+
+        yield return new WaitForSeconds(dashingCooldown);
+
+        canDash = true;
+    }
 
     private void OnDrawGizmos()
     {
