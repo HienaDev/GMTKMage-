@@ -329,11 +329,11 @@ public class PlayerMove : MonoBehaviour
     {
         
         Time.timeScale = 0.2f;
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.4f);
 
         Time.timeScale = 1f;
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         Destroy(gameObject);
     }
