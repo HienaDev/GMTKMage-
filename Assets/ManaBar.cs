@@ -29,6 +29,5 @@ public class ManaBar : MonoBehaviour
  
         manaBar.fillAmount = mana / 1f;
 
-        Debug.Log(mana);
     }
 }
