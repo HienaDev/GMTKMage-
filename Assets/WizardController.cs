@@ -5,14 +5,16 @@ using UnityEngine;
 public class WizardController : MonoBehaviour
 {
 
-    public GameObject pointer1;
-    public GameObject pointer2;
+    public GameObject lightningPointer;
 
-    public GameObject bullet;
+    [SerializeField] private List<GameObject> pointers;
+    private int currPointer = 0;
+
+    GameObject activePointer;
+
+    public GameObject trap;
 
     LineRenderer line;
-
-    GameObject lastbullet = null;
 
     Vector3 dragAnchor;
     Vector3 dragPoint;
@@ -20,6 +22,13 @@ public class WizardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currPointer++;
+        if(currPointer == pointers.Count)
+        {
+            currPointer = 0;
+        }
+        swapPointer(pointers[currPointer]);
+
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
     }
@@ -39,29 +48,20 @@ public class WizardController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            if(lastbullet != null)
-            {
-                Destroy(lastbullet);
-            }
             Vector3 momentum = finishDrag();
-            GameObject shot = Instantiate(bullet, this.transform);
-            shot.transform.position = dragAnchor;
-            Rigidbody2D shotBody = shot.GetComponent<Rigidbody2D>();
-            shotBody.velocity = momentum;
-            lastbullet = shot;
+            GameObject activeTrap = Instantiate(trap, this.transform);
+            LightningTrap controller = activeTrap.GetComponent<LightningTrap>();
+            controller.fireSpell(dragAnchor, momentum);
 
         }
-        proccessPointer(5);
+        proccessPointer();
     }
 
-    void proccessPointer(float intensity)
+    void proccessPointer()
     {
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorld.z = 0;
-        pointer1.transform.position = mouseWorld;
-        pointer2.transform.position = mouseWorld;
-        pointer1.transform.Rotate(new Vector3(0, 0, 1), Time.deltaTime * 10 * intensity);
-        pointer2.transform.Rotate(new Vector3(0, 0, -1), Time.deltaTime * 15 * intensity);
+        activePointer.transform.position = mouseWorld;
     }
 
     void enterDrag()
@@ -84,5 +84,11 @@ public class WizardController : MonoBehaviour
     {
         line.enabled = false;
         return dragPoint-dragAnchor;
+    }
+
+    void swapPointer(GameObject prefab)
+    {
+        Destroy(activePointer);
+        activePointer = Instantiate(prefab, this.transform);
     }
 }
