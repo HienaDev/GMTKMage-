@@ -9,6 +9,7 @@ public class LightningTrap : Trap
 
     //[SerializeField] public GameObject pointer;
 
+    AudioSource shoot;
 
     public GameObject beam;
     public GameObject laser;
@@ -20,7 +21,7 @@ public class LightningTrap : Trap
     // Start is called before the first frame update
     void Start()
     {
-        
+        shoot = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -57,6 +58,8 @@ public class LightningTrap : Trap
             {
                 laser.SetActive(false);
                 beam.SetActive(true);
+                shoot.pitch = shoot.pitch / beamTime;
+                shoot.Play();
             };
             Vector3 beamScale = beam.transform.localScale;
             beamScale.x = ((beamTime+laserTime)-timeFromSpawn)/(beamTime+laserTime);
