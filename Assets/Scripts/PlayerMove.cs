@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,6 +36,7 @@ public class PlayerMove : MonoBehaviour
     private float colliderCrouchedSize = 17.6f;
 
     private bool dead = false;
+    private bool deadAndOver = false;
 
     // Variables to check if the player is on the ground
     [SerializeField, Header("\nGroundCheck")] private Transform groundCheck;
@@ -70,16 +72,8 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-
-        defaultSpeed = moveSpeed;
-        animator = GetComponentInChildren<Animator>();
-
-        Health = health;
-
-        spriteRendererPlayer = GetComponentInChildren<SpriteRenderer>();
-
-        IsDashing = false;
+        
+        ResetPlayer();
 
     }
 
@@ -335,7 +329,48 @@ public class PlayerMove : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        Destroy(gameObject);
+        deadAndOver = true;
     }
     
+
+    public void IncreaseHealthUpgrade()
+    {
+        health += 1;
+    }
+
+    public void IncreaseJumpsUpgrade()
+    {
+        maxJumps += 1;
+    }
+
+    public void IncreaseSpeedUpgrade()
+    {
+        moveSpeed += 20;
+    }
+
+    public bool IsDead() => deadAndOver;
+
+    public void KillPlayer()
+    {
+        deadAndOver = true;
+    }
+
+    public void ResetPlayer()
+    {
+        rb = GetComponent<Rigidbody2D>();
+
+        defaultSpeed = moveSpeed;
+        animator = GetComponentInChildren<Animator>();
+
+        Health = health;
+
+        spriteRendererPlayer = GetComponentInChildren<SpriteRenderer>();
+
+        IsDashing = false;
+
+        dead = false;
+        deadAndOver = false;
+
+        gameObject.transform.position = new Vector3(0f, -96f, 0f);
+    }
 }

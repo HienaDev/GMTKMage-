@@ -17,14 +17,11 @@ public class TimerDungeon : MonoBehaviour
     void Start()
     {
 
-
-
-        // Starts the timer automatically
-        timerIsRunning = true;
-
-        TimeRemaining = time;
+        ResetTimer();
 
         text = GetComponent<TMP_Text>();
+
+
     }
 
     // Update is called once per frame
@@ -52,5 +49,15 @@ public class TimerDungeon : MonoBehaviour
     public void StopTimer()
     {
         timerIsRunning = false;
+    }
+
+    public void ResetTimer()
+    {
+        // Starts the timer automatically
+        timerIsRunning = true;
+
+        TimeRemaining = time;
+
+    
     }
 }
