@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +33,8 @@ public class PlayerMove : MonoBehaviour
 
     private float colliderCrouchedOffset = -5f;
     private float colliderCrouchedSize = 17.6f;
+
+    private bool dead = false;
 
     // Variables to check if the player is on the ground
     [SerializeField, Header("\nGroundCheck")] private Transform groundCheck;
@@ -89,6 +92,13 @@ public class PlayerMove : MonoBehaviour
 
         DetectGround();
 
+
+        if(Health <= 0)
+        {
+            dead = true;
+            StartCoroutine(Death());
+        }
+
         if(!IsDashing)
         { 
             groundCollider.enabled = Grounded;
@@ -103,12 +113,12 @@ public class PlayerMove : MonoBehaviour
 
         animator.SetBool("crouched", Crouched);
 
-        if (Input.GetAxis("Horizontal") * transform.right.x < 0)
+        if (Input.GetAxis("Horizontal") * transform.right.x < 0 && !dead)
         {
             IsDashing = false;
         }
 
-        if (!IsDashing)
+        if (!IsDashing && !dead)
         { 
             if(Crouched)
             {
@@ -149,7 +159,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Jump") && (nJumps > 0) && !Crouched)
+        if (Input.GetButtonDown("Jump") && (nJumps > 0) && !Crouched && !dead)
         {
             currentVelocity.y = jumpSpeed;
             lastJumpTime = Time.time;
@@ -157,7 +167,7 @@ public class PlayerMove : MonoBehaviour
             leftGround = Time.time - coyoteTime;
             nJumps--;
         }
-        else if (Input.GetButton("Jump") && ((Time.time - lastJumpTime) <= jumpMaxTime) && currentVelocity.y > 0)
+        else if (Input.GetButton("Jump") && ((Time.time - lastJumpTime) <= jumpMaxTime) && currentVelocity.y > 0 && !dead)
         {
             rb.gravityScale = jumpGravity;
         }
@@ -167,13 +177,13 @@ public class PlayerMove : MonoBehaviour
             lastJumpTime = 0;
         }
 
-        if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash)// && Grounded)
+        if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash && !dead)// && Grounded)
         {
             animator.SetTrigger("Roll");
             StartCoroutine(Dash());
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && !dead)
         {
             Crouched = true;
         }
@@ -311,5 +321,14 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private IEnumerator Death()
+    {
+        animator.SetTrigger("Death");
+        Time.timeScale = 0.1f;
+
+        yield return new WaitForSeconds(5);
+
+        Destroy(gameObject);
+    }
     
 }

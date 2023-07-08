@@ -9,7 +9,9 @@ public class TimerDungeon : MonoBehaviour
 
     private TMP_Text text;
 
-    [SerializeField] private float timeRemaining = 20;
+    [SerializeField] private float time = 60;
+
+    public float TimeRemaining { get; private set; }
     private bool timerIsRunning = false;
 
     void Start()
@@ -20,6 +22,8 @@ public class TimerDungeon : MonoBehaviour
         // Starts the timer automatically
         timerIsRunning = true;
 
+        TimeRemaining = time;
+
         text = GetComponent<TMP_Text>();
     }
 
@@ -28,20 +32,25 @@ public class TimerDungeon : MonoBehaviour
     {
         if (timerIsRunning)
         {
-            if (timeRemaining > 0)
+            if (TimeRemaining > 0)
             {
-                timeRemaining -= Time.deltaTime;
+                TimeRemaining -= Time.deltaTime;
             }
             else
             {
                 Debug.Log("Time has run out!");
-                timeRemaining = 0;
+                TimeRemaining = 0;
                 timerIsRunning = false;
             }
-            if (Mathf.FloorToInt(timeRemaining % 60).ToString().Length > 1)
-                text.text = "0" + Mathf.FloorToInt(timeRemaining / 60).ToString() + " : " + Mathf.FloorToInt(timeRemaining % 60).ToString();
+            if (Mathf.FloorToInt(TimeRemaining % 60).ToString().Length > 1)
+                text.text = "0" + Mathf.FloorToInt(TimeRemaining / 60).ToString() + " : " + Mathf.FloorToInt(TimeRemaining % 60).ToString();
             else
-                text.text = "0" + Mathf.FloorToInt(timeRemaining / 60).ToString() + " : 0" + Mathf.FloorToInt(timeRemaining % 60).ToString();
+                text.text = "0" + Mathf.FloorToInt(TimeRemaining / 60).ToString() + " : 0" + Mathf.FloorToInt(TimeRemaining % 60).ToString();
         }
+    }
+
+    public void StopTimer()
+    {
+        timerIsRunning = false;
     }
 }
