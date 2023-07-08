@@ -11,6 +11,20 @@ public class WizardController : MonoBehaviour
     GameObject activePointer;
     GameObject activeTrap;
 
+    float startHold;
+    float timeHeld;
+
+    Vector3 lastMouse;
+
+    float mana = 1f;
+    float manaRegen = 1f;
+    float manaBaseline = 0.2f;
+
+    float manaStart = 0f;
+    float manaSpent = 0f;
+
+
+
     LineRenderer line;
 
     Vector3 dragAnchor;
@@ -20,6 +34,7 @@ public class WizardController : MonoBehaviour
     void Start()
     {
         swapTrap();
+        lastMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
@@ -28,6 +43,8 @@ public class WizardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        processMana();
+
         if (Input.GetMouseButtonDown(0))
         {
             enterDrag();
@@ -40,11 +57,26 @@ public class WizardController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+
             Vector3 momentum = finishDrag();
             GameObject trap = Instantiate(activeTrap, this.transform);
             Trap controller = trap.GetComponent<Trap>();
-            controller.fireSpell(dragAnchor, momentum);
+
+            if(manaSpent > manaStart)
+            {
+                Destroy(trap);
+            }
+            else
+            {
+                controller.fireSpell(dragAnchor, momentum, manaSpent);
+            }
         }
+
+        if (mana <= 1f)
+        {
+            mana += Time.deltaTime/10f*manaRegen;
+        }
+
         proccessPointer();
     }
 
@@ -53,6 +85,40 @@ public class WizardController : MonoBehaviour
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorld.z = 0;
         activePointer.transform.position = mouseWorld;
+        if (Input.GetMouseButton(0))
+        {
+            float manaSpent = Mathf.Clamp(Time.time - startHold, 0f, 1f);
+            activePointer.transform.position = dragAnchor;
+            activePointer.transform.up = dragAnchor-mouseWorld;
+            activePointer.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + manaSpent);
+        }
+        else
+        {
+            activePointer.transform.position = mouseWorld;
+            activePointer.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * 1;
+            if(Vector3.Distance(lastMouse, mouseWorld) > 10)
+            {
+                activePointer.transform.up = lastMouse - mouseWorld;
+                lastMouse = mouseWorld;
+            }
+        }
+    }
+
+    void processMana()
+    {
+        if (!Input.GetMouseButton(0))
+        {
+            mana += Time.deltaTime * 10f * manaRegen;
+        }
+        else
+        {
+            manaSpent = Mathf.Clamp(Time.time - startHold + manaBaseline, 0f, 1f);
+            if (manaSpent > manaStart)
+            {
+                manaSpent = manaStart;
+            }
+            mana = manaStart - manaSpent;
+        }        
     }
 
     void enterDrag()
@@ -62,18 +128,26 @@ public class WizardController : MonoBehaviour
         dragAnchor.z = 0;
         line.SetPosition(0, dragAnchor);
 
+        startHold = Time.time;
+        manaStart = mana;
+
     }
 
     void proccessDrag()
     {
         dragPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         dragPoint.z = 0;
-        line.SetPosition(1, dragPoint);
+        
+        line.SetPosition(1, dragPoint + new Vector3(Random.value*manaSpent, Random.value*manaSpent, 0));
+        activePointer.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + manaSpent);
+        line.startWidth = manaSpent*2;
+        line.endWidth = manaSpent*2;
     }
 
     Vector3 finishDrag()
     {
         line.enabled = false;
+        timeHeld = Time.time;
         return dragPoint-dragAnchor;
     }
 

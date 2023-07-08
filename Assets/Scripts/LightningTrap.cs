@@ -7,10 +7,12 @@ public class LightningTrap : Trap
 
     float spawnTime;
 
-    [SerializeField] public GameObject pointer;
+    //[SerializeField] public GameObject pointer;
+
 
     public GameObject beam;
     public GameObject laser;
+    public GameObject sprite;
 
     float laserTime = 0.75f;
     float beamTime = 0.15f;
@@ -27,13 +29,17 @@ public class LightningTrap : Trap
         processSpell();
     }
 
-    public override void fireSpell(Vector3 startPos, Vector3 direction)
+    public override void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld)
     {
+        timeHeld = Mathf.Clamp(timeHeld, 0f, 1f);
+        beamTime = timeHeld; 
+
         direction.z = startPos.z;
         this.transform.position = startPos;
         this.transform.up = -(startPos+direction - transform.position);
         spawnTime = Time.time;
         beam.SetActive(false);
+        sprite.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + timeHeld);
     }
 
     void processSpell() {
@@ -55,7 +61,6 @@ public class LightningTrap : Trap
             Vector3 beamScale = beam.transform.localScale;
             beamScale.x = ((beamTime+laserTime)-timeFromSpawn)/(beamTime+laserTime);
             beam.transform.localScale = beamScale;
-
         }
 
         if(timeFromSpawn > laserTime + beamTime)
