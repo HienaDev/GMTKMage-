@@ -2,10 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightningTrap : MonoBehaviour
+public class LightningTrap : Trap
 {
 
     float spawnTime;
+
+    [SerializeField] public GameObject pointer;
+    public GameObject beam;
+    public GameObject laser;
+
+    float laserTime = 0.5f;
+    float beamTime = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -17,22 +24,47 @@ public class LightningTrap : MonoBehaviour
     void Update()
     {
         processSpell();
-        if(Time.time - spawnTime > 1)
-        {
-            Destroy(this.gameObject);
-        }
     }
 
-    public void fireSpell(Vector3 startPos, Vector3 direction)
+    public override void fireSpell(Vector3 startPos, Vector3 direction)
     {
         direction.z = startPos.z;
         this.transform.position = startPos;
-        this.transform.up = startPos+direction - transform.position;
-        this.transform.localScale = new Vector3(0.5f, 1, 1);
+        this.transform.up = -(startPos+direction - transform.position);
         spawnTime = Time.time;
+        beam.SetActive(false);
     }
 
     void processSpell() {
-        this.transform.localScale = new Vector3(0.5f, Mathf.Pow(1 + (Time.time - spawnTime)*2, 5), 1);
+        float timeFromSpawn = Time.time - spawnTime;
+        if(timeFromSpawn < laserTime)
+        {
+            Vector3 newscale = laser.transform.localScale;
+            newscale.x = (timeFromSpawn-laserTime)/laserTime;
+            laser.transform.localScale = newscale;
+        }
+
+        if(timeFromSpawn > laserTime && timeFromSpawn < laserTime+beamTime)
+        {
+            if (!beam.activeSelf)
+            {
+                laser.SetActive(false);
+                beam.SetActive(true);
+            };
+            Vector3 beamScale = beam.transform.localScale;
+            beamScale.x = ((beamTime+laserTime)-timeFromSpawn)/(beamTime+laserTime);
+            beam.transform.localScale = beamScale;
+
+        }
+
+        if(timeFromSpawn > laserTime + beamTime)
+        {
+            beam.SetActive(false);
+            this.transform.localScale = this.transform.localScale * 0.95f;
+            if(this.transform.localScale.magnitude < 0.1)
+            {
+                Destroy(this.gameObject);
+            }
+        }
     }
 }
