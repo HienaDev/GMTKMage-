@@ -21,8 +21,6 @@ public class MoveUpAndDown : MonoBehaviour
 
         gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + floatingRatio, gameObject.transform.position.z);
 
-        Debug.Log("Distance: " + distance + " Max Distance: " + maxDistance + " Ratio: " + floatingRatio);
-
         if (distance < maxDistance && floatingRatio >= 0)
         {
             distance += floatingRatio;
