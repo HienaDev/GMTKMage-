@@ -8,6 +8,7 @@ public class LightningTrap : Trap
     float spawnTime;
 
     [SerializeField] public GameObject pointer;
+
     public GameObject beam;
     public GameObject laser;
 

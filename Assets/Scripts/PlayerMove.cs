@@ -74,10 +74,7 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKey(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
+        
 
 
         DetectGround();

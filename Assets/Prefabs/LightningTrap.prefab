@@ -250,6 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointer: {fileID: 76346934205249328, guid: c532e347f859e504f9fe0afe08417372, type: 3}
+  pointer: {fileID: 76346934205249328, guid: c532e347f859e504f9fe0afe08417372, type: 3}
   beam: {fileID: 6363514506263083682}
   laser: {fileID: 9070453288635850674}
 --- !u!212 &1200590732226941602
@@ -335,7 +336,7 @@ GameObject:
   - component: {fileID: 2821794856987463836}
   - component: {fileID: 329495319498654670}
   - component: {fileID: 8089522720320976959}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: OuterBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -41,7 +41,7 @@ public class TimerDungeon : MonoBehaviour
             if (Mathf.FloorToInt(timeRemaining % 60).ToString().Length > 1)
                 text.text = "0" + Mathf.FloorToInt(timeRemaining / 60).ToString() + " : " + Mathf.FloorToInt(timeRemaining % 60).ToString();
             else
-                text.text = "0" + Mathf.FloorToInt(timeRemaining / 60).ToString() + " : " + Mathf.FloorToInt(timeRemaining % 60).ToString() + "0";
+                text.text = "0" + Mathf.FloorToInt(timeRemaining / 60).ToString() + " : 0" + Mathf.FloorToInt(timeRemaining % 60).ToString();
         }
     }
 }
