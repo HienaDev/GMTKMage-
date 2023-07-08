@@ -93,9 +93,10 @@ public class PlayerMove : MonoBehaviour
         DetectGround();
 
 
-        if(Health <= 0)
+        if(Health <= 0 && !dead)
         {
             dead = true;
+            animator.SetTrigger("Death");
             StartCoroutine(Death());
         }
 
@@ -109,9 +110,12 @@ public class PlayerMove : MonoBehaviour
 
         isTrailing = IsDashing;
 
-        animator.SetFloat("VelocityY", currentVelocity.y);
+        if(!dead)
+        { 
+            animator.SetFloat("VelocityY", currentVelocity.y);
 
-        animator.SetBool("crouched", Crouched);
+            animator.SetBool("crouched", Crouched);
+        }
 
         if (Input.GetAxis("Horizontal") * transform.right.x < 0 && !dead)
         {
@@ -136,9 +140,9 @@ public class PlayerMove : MonoBehaviour
 
             }
         }
- 
 
-        animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
+        if (!dead)
+            animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
 
 
         if (Grounded && currentVelocity.y <= 1e-3)
@@ -212,7 +216,7 @@ public class PlayerMove : MonoBehaviour
             spriteRendererPlayer.color = Color.white;
         }
 
-        if (Flashing)
+        if (Flashing && Health >= 1)
         {
             spriteRendererPlayer.enabled = !spriteRendererPlayer.enabled;
         }
@@ -323,10 +327,13 @@ public class PlayerMove : MonoBehaviour
 
     private IEnumerator Death()
     {
-        animator.SetTrigger("Death");
-        Time.timeScale = 0.1f;
+        
+        Time.timeScale = 0.2f;
+        yield return new WaitForSeconds(0.8f);
 
-        yield return new WaitForSeconds(5);
+        Time.timeScale = 1f;
+
+        yield return new WaitForSeconds(3f);
 
         Destroy(gameObject);
     }

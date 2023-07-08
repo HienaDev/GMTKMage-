@@ -29,10 +29,7 @@ public class DetectCollision : MonoBehaviour
         {
             playerScript.TakeDamage(1);
             Debug.Log("Laser hit");
-            if (playerScript.Health <= 0)
-            {
-                Destroy(player);
-            }
+
         }
     }
 }
