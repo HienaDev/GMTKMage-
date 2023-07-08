@@ -12,8 +12,8 @@ public class LightningTrap : Trap
     public GameObject beam;
     public GameObject laser;
 
-    float laserTime = 0.5f;
-    float beamTime = 0.5f;
+    float laserTime = 0.75f;
+    float beamTime = 0.15f;
 
     // Start is called before the first frame update
     void Start()
