@@ -46,6 +46,11 @@ public class TimerDungeon : MonoBehaviour
         }
     }
 
+    public void ArenaUpgradeAdd10s()
+    {
+        time += 10;
+    }
+
     public void StopTimer()
     {
         timerIsRunning = false;

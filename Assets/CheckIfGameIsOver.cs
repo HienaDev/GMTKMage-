@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CheckIfGameIsOver : MonoBehaviour
 {
@@ -11,6 +12,12 @@ public class CheckIfGameIsOver : MonoBehaviour
 
     [SerializeField] private GameObject arenaUpgrade;
     [SerializeField] private GameObject playerUpgrade;
+
+    [SerializeField] private UnityEvent playerWin;
+
+    [SerializeField] private UnityEvent arenaWin;
+
+    private bool gameRunning = true;
     void Start()
     {
         timer = FindObjectOfType<TimerDungeon>();
@@ -20,8 +27,10 @@ public class CheckIfGameIsOver : MonoBehaviour
     void Update()
     {
 
-        if(timer.TimeRemaining <= 0)
+        if(timer.TimeRemaining <= 0 && gameRunning)
         {
+            gameRunning = false;
+            playerWin.Invoke();
             arenaUpgrade.SetActive(true);
         }
 
@@ -30,8 +39,10 @@ public class CheckIfGameIsOver : MonoBehaviour
             player = FindObjectOfType<PlayerMove>();
         }
 
-        if(player.IsDead())
+        if(player.IsDead() && gameRunning)
         {
+            gameRunning = false;
+            arenaWin.Invoke();
             playerUpgrade.SetActive(true);
             timer.StopTimer();
         }
@@ -43,6 +54,7 @@ public class CheckIfGameIsOver : MonoBehaviour
     {
         player.ResetPlayer();
         timer.ResetTimer();
+        gameRunning = true;
         playerUpgrade.SetActive(false);
         arenaUpgrade.SetActive(false);
     }
