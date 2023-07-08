@@ -15,11 +15,11 @@ public class WizardController : MonoBehaviour
 
     //public float Mana { get; private set; }
     float ManaRegen = 1f;
-    float ManaBaseline = 0.0f;
+    float ManaBaseline = 0.2f;
 
-    public float Mana = 1f;
-    float ManaStart = 0f;
-    float ManaSpent = 0f;
+    public float Mana;
+    float ManaStart;
+    float ManaSpent;
 
 
 
@@ -34,7 +34,9 @@ public class WizardController : MonoBehaviour
         swapTrap();
         lastMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Mana = 1;
+        Mana = 1f;
+        ManaStart = 1f;
+        ManaSpent = 0f;
 
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
@@ -43,7 +45,7 @@ public class WizardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //processMana();
+        processMana();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -62,14 +64,16 @@ public class WizardController : MonoBehaviour
             GameObject trap = Instantiate(activeTrap, this.transform);
             Trap controller = trap.GetComponent<Trap>();
 
-            //if(ManaSpent > ManaStart)
-            //{
-            //    Destroy(trap);
-            //}
-            //else
-            //{
-                controller.fireSpell(dragAnchor, momentum, 1f);
-            //}
+            if (ManaSpent < ManaBaseline) 
+            {
+                Destroy(trap);
+            }
+            else
+            {
+                controller.fireSpell(dragAnchor, momentum, ManaSpent);
+            }
+            
+            
         }
 
         proccessPointer();
@@ -100,12 +104,19 @@ public class WizardController : MonoBehaviour
 
     void processMana()
     {
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            ManaStart = Mana;
+            ManaSpent = ManaBaseline;
+        }
+
         if (Input.GetMouseButton(0))
         {
             ManaSpent += Time.deltaTime;
             if (ManaSpent > ManaStart)
             {
-                //ManaSpent = ManaStart;
+                ManaSpent = ManaStart;
             }
             Mana = ManaStart - ManaSpent;
 
@@ -125,10 +136,6 @@ public class WizardController : MonoBehaviour
         dragAnchor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         dragAnchor.z = 0;
         line.SetPosition(0, dragAnchor);
-
-        ManaStart = Mana;
-        ManaSpent = ManaBaseline;
-
     }
 
     void proccessDrag()
