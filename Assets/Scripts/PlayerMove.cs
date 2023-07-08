@@ -19,6 +19,8 @@ public class PlayerMove : MonoBehaviour
     private Vector2 currentVelocity;
     private Animator animator;
 
+    private SpriteRenderer spriteRendererPlayer;
+
     public bool Crouched { get; private set; }
 
     private float colliderNormalOffset = -1.5f;
@@ -65,6 +67,9 @@ public class PlayerMove : MonoBehaviour
 
         defaultSpeed = moveSpeed;
         animator = GetComponentInChildren<Animator>();
+
+
+        spriteRendererPlayer = GetComponentInChildren<SpriteRenderer>();
 
         IsDashing = false;
 
@@ -152,7 +157,7 @@ public class PlayerMove : MonoBehaviour
             lastJumpTime = 0;
         }
 
-        if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash && Grounded)
+        if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash)// && Grounded)
         {
             animator.SetTrigger("Roll");
             StartCoroutine(Dash());
@@ -176,8 +181,15 @@ public class PlayerMove : MonoBehaviour
                 GameObject f = Instantiate(fader, new Vector3(transform.position.x, transform.position.y, transform.position.z + 1), transform.rotation) as GameObject;
                 SpriteRenderer faderSprite = f.GetComponent<SpriteRenderer>();
                 faderSprite.color = new Color(255f/255f, 200f/255f, 0, 0.4f);
+
+                spriteRendererPlayer.color = new Color(255f / 255f, 200f / 255f, 0, 0.4f);
+
                 faderSprite.sprite = GetComponentInChildren<SpriteRenderer>().sprite;
             }
+        }
+        else
+        {
+            spriteRendererPlayer.color = Color.white;
         }
 
 
