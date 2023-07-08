@@ -18,6 +18,10 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 currentVelocity;
     private Animator animator;
+    [SerializeField] private int health;
+    public int Health { get; private set; }
+    public bool Flashing { get; private set; }
+
 
     private SpriteRenderer spriteRendererPlayer;
 
@@ -68,6 +72,7 @@ public class PlayerMove : MonoBehaviour
         defaultSpeed = moveSpeed;
         animator = GetComponentInChildren<Animator>();
 
+        Health = health;
 
         spriteRendererPlayer = GetComponentInChildren<SpriteRenderer>();
 
@@ -97,6 +102,11 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat("VelocityY", currentVelocity.y);
 
         animator.SetBool("crouched", Crouched);
+
+        if (Input.GetAxis("Horizontal") * transform.right.x < 0)
+        {
+            IsDashing = false;
+        }
 
         if (!IsDashing)
         { 
@@ -192,6 +202,14 @@ public class PlayerMove : MonoBehaviour
             spriteRendererPlayer.color = Color.white;
         }
 
+        if (Flashing)
+        {
+            spriteRendererPlayer.enabled = !spriteRendererPlayer.enabled;
+        }
+        else
+        {
+            spriteRendererPlayer.enabled = true;
+        }
 
         rb.velocity = currentVelocity;
 
@@ -249,8 +267,14 @@ public class PlayerMove : MonoBehaviour
         IsDashing = true;
         currentVelocity = new Vector2(transform.right.x * defaultSpeed * dashingPower, currentVelocity.y);
 
+        yield return new WaitForSeconds(dashingTime/2);
 
-        yield return new WaitForSeconds(dashingTime);
+        //if (Input.GetAxis("Horizontal") != 0)
+        //{
+        //    IsDashing = false;
+        //}
+
+        yield return new WaitForSeconds(dashingTime/2);
 
         IsDashing = false;
 
@@ -258,6 +282,21 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(dashingCooldown);
 
         canDash = true;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+        StartCoroutine(FlashPlayer());
+    }
+
+    private IEnumerator FlashPlayer()
+    {
+        Flashing = true;
+
+        yield return new WaitForSeconds(2);
+
+        Flashing = false;
     }
 
     private void OnDrawGizmos()
