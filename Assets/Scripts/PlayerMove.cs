@@ -94,7 +94,6 @@ public class PlayerMove : MonoBehaviour
 
         animator.SetFloat("MoveSpeed", Mathf.Abs(currentVelocity.x));
 
-        Debug.Log(Mathf.Abs(currentVelocity.x));
 
         if (grounded && currentVelocity.y <= 1e-3)
         {
@@ -114,7 +113,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Jump") && (nJumps > 0))
+        if (Input.GetButtonDown("Jump") && (nJumps > 0) && !crouched)
         {
             currentVelocity.y = jumpSpeed;
             lastJumpTime = Time.time;
