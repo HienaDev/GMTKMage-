@@ -43,6 +43,7 @@ public class WizardController : MonoBehaviour
             {
                 Destroy(lastbullet);
             }
+
             Vector3 momentum = finishDrag();
             GameObject shot = Instantiate(bullet, this.transform);
             shot.transform.position = dragAnchor;
