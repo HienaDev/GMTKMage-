@@ -5,9 +5,11 @@ using UnityEngine;
 public class DestroyAll : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    private PlayerMove player;
     void Start()
     {
-        
+        player = FindObjectOfType<PlayerMove>();
     }
 
     // Update is called once per frame
@@ -18,6 +20,10 @@ public class DestroyAll : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(collision.gameObject);
+        if (collision.gameObject.tag.Equals("Player") == true)
+        {
+
+            player.KillPlayer();
+        }
     }
 }

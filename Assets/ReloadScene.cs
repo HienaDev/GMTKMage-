@@ -21,4 +21,9 @@ public class ReloadScene : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }

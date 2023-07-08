@@ -30,12 +30,20 @@ public class CheckIfGameIsOver : MonoBehaviour
             player = FindObjectOfType<PlayerMove>();
         }
 
-        if(player == null)
+        if(player.IsDead())
         {
             playerUpgrade.SetActive(true);
             timer.StopTimer();
         }
 
 
+    }
+
+    public void ResetGame()
+    {
+        player.ResetPlayer();
+        timer.ResetTimer();
+        playerUpgrade.SetActive(false);
+        arenaUpgrade.SetActive(false);
     }
 }

@@ -1279,7 +1279,7 @@ GameObject:
   - component: {fileID: 720199768}
   - component: {fileID: 720199767}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1329,8 +1329,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 28477503fbbe8e04ebe10bda217ad5c6, type: 2}
-  m_sharedMaterial: {fileID: 2502830777377407993, guid: 28477503fbbe8e04ebe10bda217ad5c6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f5ed97856da67ca4ca1b267816327cb1, type: 2}
+  m_sharedMaterial: {fileID: 4335302792170442228, guid: f5ed97856da67ca4ca1b267816327cb1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1354,15 +1354,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 150
+  m_fontSizeBase: 150
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1390,7 +1390,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -16.565182}
+  m_margin: {x: 0, y: 0, z: 0, w: -0.725811}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
