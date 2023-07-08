@@ -5,14 +5,11 @@ using UnityEngine;
 public class WizardController : MonoBehaviour
 {
 
-    public GameObject lightningPointer;
-
-    [SerializeField] private List<GameObject> pointers;
-    private int currPointer = 0;
+    [SerializeField] private List<GameObject> traps;
+    private int currTrap = 0;
 
     GameObject activePointer;
-
-    public GameObject trap;
+    GameObject activeTrap;
 
     LineRenderer line;
 
@@ -22,12 +19,7 @@ public class WizardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currPointer++;
-        if(currPointer == pointers.Count)
-        {
-            currPointer = 0;
-        }
-        swapPointer(pointers[currPointer]);
+        swapTrap();
 
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
@@ -49,10 +41,9 @@ public class WizardController : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             Vector3 momentum = finishDrag();
-            GameObject activeTrap = Instantiate(trap, this.transform);
-            LightningTrap controller = activeTrap.GetComponent<LightningTrap>();
+            GameObject trap = Instantiate(activeTrap, this.transform);
+            Trap controller = trap.GetComponent<Trap>();
             controller.fireSpell(dragAnchor, momentum);
-
         }
         proccessPointer();
     }
@@ -84,6 +75,18 @@ public class WizardController : MonoBehaviour
     {
         line.enabled = false;
         return dragPoint-dragAnchor;
+    }
+
+    void swapTrap()
+    {
+        currTrap++;
+        if(currTrap >= traps.Count)
+        {
+            currTrap = 0;
+        }
+        activeTrap = traps[currTrap];
+        Trap trapCont = activeTrap.GetComponent<Trap>();
+        swapPointer(trapCont.pointer);
     }
 
     void swapPointer(GameObject prefab)
