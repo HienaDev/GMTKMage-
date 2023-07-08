@@ -31,7 +31,7 @@ public class LightningTrap : Trap
 
     public override void fireSpell(Vector3 startPos, Vector3 direction, float timeHeld)
     {
-        timeHeld = Mathf.Clamp(timeHeld, 0f, 1f);
+        timeHeld = Mathf.Pow(0.1f+timeHeld, 2);
         beamTime = timeHeld; 
 
         direction.z = startPos.z;
