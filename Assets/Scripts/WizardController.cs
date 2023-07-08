@@ -14,8 +14,8 @@ public class WizardController : MonoBehaviour
     Vector3 lastMouse;
 
     //public float Mana { get; private set; }
-    float ManaRegen = 1f;
-    float ManaBaseline = 0.2f;
+    float ManaRegen = 0.5f;
+    float ManaBaseline = 0.3f;
 
     public float Mana;
     float ManaStart;
@@ -64,7 +64,7 @@ public class WizardController : MonoBehaviour
             GameObject trap = Instantiate(activeTrap, this.transform);
             Trap controller = trap.GetComponent<Trap>();
 
-            if (ManaSpent < ManaBaseline) 
+            if (ManaStart < ManaBaseline) 
             {
                 Destroy(trap);
             }
@@ -109,6 +109,14 @@ public class WizardController : MonoBehaviour
         {
             ManaStart = Mana;
             ManaSpent = ManaBaseline;
+            return;
+        }
+
+        if (ManaStart < ManaBaseline)
+        {
+            Mana += Time.deltaTime * ManaRegen;
+            Mana = Mathf.Clamp(Mana, 0f, 1f);
+            return;
         }
 
         if (Input.GetMouseButton(0))
@@ -119,9 +127,6 @@ public class WizardController : MonoBehaviour
                 ManaSpent = ManaStart;
             }
             Mana = ManaStart - ManaSpent;
-
-            Mana += Time.deltaTime * ManaRegen;
-            Mana = Mathf.Clamp(Mana, 0f, 1f);
         }
         else
         {
