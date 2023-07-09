@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,15 +12,18 @@ public class ManaBar : MonoBehaviour
     private float maxMana;
 
     private Image manaBar;
-    
+
+    private TMP_Text text;
+
     void Start()
     {
         if (checkMana == null)
         {
             checkMana = FindObjectOfType<WizardController>();
         }
-        manaBar = GetComponent<Image>();    
+        manaBar = GetComponent<Image>();
 
+        text = GetComponentInChildren<TMP_Text>();
     }
 
     // Update is called once per frame
@@ -30,6 +34,8 @@ public class ManaBar : MonoBehaviour
 
  
         manaBar.fillAmount = mana / maxMana;
+
+        text.text = ((int)(mana * 100)).ToString() + "/" + (maxMana * 100).ToString();
 
     }
 }

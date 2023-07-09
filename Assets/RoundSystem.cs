@@ -16,6 +16,8 @@ public class RoundSystem : MonoBehaviour
 
     [SerializeField] private string winner;
 
+    [SerializeField] private int roundsToWin;
+
     private int roundsWon = 0;
     void Start()
     {
@@ -34,7 +36,7 @@ public class RoundSystem : MonoBehaviour
             images[i].sprite = emptyRound;
         }
 
-        if (roundsWon == 2)
+        if (roundsWon == roundsToWin)
         { 
             if (winner == "Knight")
             {

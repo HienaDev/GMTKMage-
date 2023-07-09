@@ -29,6 +29,8 @@ public class WizardController : MonoBehaviour
     Vector3 dragAnchor;
     Vector3 dragPoint;
 
+    public bool CanCast { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,8 @@ public class WizardController : MonoBehaviour
 
         ManaStart = 1f;
         ManaSpent = 0f;
+
+        CanCast = true;
 
         line = this.GetComponent<LineRenderer>();
         line.enabled = false;
@@ -69,7 +73,7 @@ public class WizardController : MonoBehaviour
             proccessDrag();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && CanCast)
         {
 
             Vector3 momentum = finishDrag();
@@ -85,6 +89,17 @@ public class WizardController : MonoBehaviour
                 for(int i = 0; i<friends; i++)
                 {
                     GameObject frin = Instantiate(activeTrap, this.transform);
+
+                    //Transform spriteFrin = frin.transform.Find("Sprite");
+                    //SpriteRenderer sprite = spriteFrin.gameObject.GetComponent<SpriteRenderer>();
+                    //sprite.color = Color.yellow;
+
+                    SpriteRenderer[] sprites = frin.GetComponentsInChildren<SpriteRenderer>();
+                    foreach (SpriteRenderer sprite in sprites)
+                    {
+                        sprite.color = Color.green;
+                    }
+
                     Trap frinControl = frin.GetComponent<Trap>();
                     Vector3 randpoint = Random.onUnitSphere;
                     randpoint.z = dragAnchor.z;
@@ -197,5 +212,16 @@ public class WizardController : MonoBehaviour
     {
         Destroy(activePointer);
         activePointer = Instantiate(prefab, this.transform);
+    }
+
+    public void AbleToCast() => StartCoroutine(BackToCasting());
+
+    public void NotAbleToCast() => CanCast = false;
+
+    private IEnumerator BackToCasting()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        CanCast = true;
     }
 }
