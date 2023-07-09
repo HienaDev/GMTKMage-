@@ -13,6 +13,8 @@ public class WizardController : MonoBehaviour
 
     Vector3 lastMouse;
 
+    public bool staggered = false;
+
     //public float Mana { get; private set; }
     float ManaRegen = 0.5f;
     float ManaBaseline = 0.3f;
@@ -94,11 +96,11 @@ public class WizardController : MonoBehaviour
                     //SpriteRenderer sprite = spriteFrin.gameObject.GetComponent<SpriteRenderer>();
                     //sprite.color = Color.yellow;
 
-                    SpriteRenderer[] sprites = frin.GetComponentsInChildren<SpriteRenderer>();
-                    foreach (SpriteRenderer sprite in sprites)
-                    {
-                        sprite.color = Color.green;
-                    }
+                    //SpriteRenderer[] sprites = frin.GetComponentsInChildren<SpriteRenderer>();
+                    //foreach (SpriteRenderer sprite in sprites)
+                    //{
+                    //    sprite.color = new Color(1f, 0.5f, 0f);
+                    //}
 
                     Trap frinControl = frin.GetComponent<Trap>();
                     Vector3 randpoint = Random.onUnitSphere;
@@ -118,6 +120,10 @@ public class WizardController : MonoBehaviour
     void proccessPointer()
     {
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (staggered)
+        {
+            mouseWorld += new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0);
+        }
         mouseWorld.z = 0;
         activePointer.transform.position = mouseWorld;
         if (Input.GetMouseButton(0))
@@ -182,6 +188,10 @@ public class WizardController : MonoBehaviour
     void proccessDrag()
     {
         dragPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (staggered)
+        {
+            dragPoint += new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0);
+        }
         dragPoint.z = 0;
         
         line.SetPosition(1, dragPoint + new Vector3(Random.value*ManaSpent, Random.value*ManaSpent, 0));
@@ -193,6 +203,12 @@ public class WizardController : MonoBehaviour
     Vector3 finishDrag()
     {
         line.enabled = false;
+        if (staggered)
+        {
+            dragPoint += new Vector3(Random.Range(-20f, 20f), Random.Range(-20f, 20f), 0);
+        }
+        dragPoint.z = 0;
+
         return dragPoint-dragAnchor;
     }
 

@@ -18,10 +18,13 @@ public class LightningTrap : Trap
     float laserTime = 0.75f;
     float beamTime = 0.15f;
 
+    CamShake camShake;
+
     // Start is called before the first frame update
     void Start()
     {
         shoot = GetComponent<AudioSource>();
+        camShake = FindObjectOfType<CamShake>();
     }
 
     // Update is called once per frame
@@ -40,10 +43,12 @@ public class LightningTrap : Trap
         this.transform.up = -(startPos+direction - transform.position);
         spawnTime = Time.time;
         beam.SetActive(false);
-        sprite.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + timeHeld);
+        sprite.transform.localScale = new Vector3(0.5f, 0.5f, 1f) * (1 + Mathf.Clamp(timeHeld, 0f, 1f));
         if (friend)
         {
             sprite.transform.localScale = sprite.transform.localScale / 2f;
+            SpriteRenderer colorChange = sprite.GetComponent<SpriteRenderer>();
+            colorChange.color = new Color(1f, 0.5f, 0f);
         }
     }
 
@@ -64,6 +69,10 @@ public class LightningTrap : Trap
                 beam.SetActive(true);
                 shoot.pitch = shoot.pitch / beamTime;
                 shoot.Play();
+                if (beamTime > 0.75)
+                {
+                    camShake.startShake();
+                }
             };
             Vector3 beamScale = beam.transform.localScale;
             beamScale.x = ((beamTime+laserTime)-timeFromSpawn)/(beamTime+laserTime);

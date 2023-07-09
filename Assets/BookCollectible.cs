@@ -27,12 +27,12 @@ public class BookCollectible : MonoBehaviour
 
     private IEnumerator DisableSpells()
     {
-        controller.enabled = false;
+        controller.staggered = true;
         spriteRenderer.color = new Color(1, 1, 1, 0.5f);
 
         yield return new WaitForSeconds(5f);
 
-        controller.enabled = true;
+        controller.staggered = false;
         Destroy(gameObject);
  
     }
