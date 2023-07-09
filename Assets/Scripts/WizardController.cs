@@ -120,10 +120,7 @@ public class WizardController : MonoBehaviour
     void proccessPointer()
     {
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (staggered)
-        {
-            mouseWorld += new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0);
-        }
+    
         mouseWorld.z = 0;
         activePointer.transform.position = mouseWorld;
         if (Input.GetMouseButton(0))
@@ -205,7 +202,7 @@ public class WizardController : MonoBehaviour
         line.enabled = false;
         if (staggered)
         {
-            dragPoint += new Vector3(Random.Range(-20f, 20f), Random.Range(-20f, 20f), 0);
+            dragPoint += new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f), 0);
         }
         dragPoint.z = 0;
 
