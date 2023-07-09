@@ -91,6 +91,7 @@ public class PlayerMove : MonoBehaviour
         {
             dead = true;
             animator.SetTrigger("Death");
+            animator.SetFloat("VelocityY", 0);
             StartCoroutine(Death());
         }
 
