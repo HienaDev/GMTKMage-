@@ -17,6 +17,8 @@ public class SpawnPowerUp : MonoBehaviour
     private System.Random rnd;
     private int i;
 
+    private bool NotSpawning = false;
+
     void Start()
     {
         rnd = new System.Random();
@@ -25,19 +27,31 @@ public class SpawnPowerUp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(readyToSpawn)
-        {
-            i = rnd.Next(0, positions.Length);
-            Instantiate(collectible, positions[i]);
-            readyToSpawn = false;
-            justSpawned = Time.time;
-        }
+        if (!NotSpawning)
+        { 
+            if(readyToSpawn)
+            {
+                i = rnd.Next(0, positions.Length);
+                Instantiate(collectible, positions[i]);
+                readyToSpawn = false;
+                justSpawned = Time.time;
+            }
 
-        if (Time.time - justSpawned > timer)
-        {
-            Debug.Log("spawns");
-            readyToSpawn = true;
+            if (Time.time - justSpawned > timer)
+            {
+                Debug.Log("spawns");
+                readyToSpawn = true;
+            }
+            Debug.Log(Time.time);
         }
-        Debug.Log(Time.time);
+        else
+        {
+            justSpawned = Time.time;
+            
+        }
     }
+
+    public void CantSpawn() => NotSpawning = true;
+
+    public void Spawn() => NotSpawning = false;
 }

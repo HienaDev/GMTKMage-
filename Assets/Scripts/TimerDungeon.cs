@@ -14,14 +14,20 @@ public class TimerDungeon : MonoBehaviour
     public float TimeRemaining { get; private set; }
     private bool timerIsRunning = false;
 
+    private float timerText = 0.15f;
+    //private bool textChanged = false;
+    private float textJustChanged = 0f;
+
     private bool colored = true;
 
     void Start()
     {
 
+        text = GetComponent<TMP_Text>();
+
         ResetTimer();
 
-        text = GetComponent<TMP_Text>();
+        
 
 
     }
@@ -31,9 +37,10 @@ public class TimerDungeon : MonoBehaviour
     {
         if (timerIsRunning)
         {
-            if (TimeRemaining < 4)
+            if (Time.time - textJustChanged > timerText && TimeRemaining < 4)
             {
                 colored = !colored;
+                textJustChanged = Time.time;
             }
 
             if (colored)
@@ -72,7 +79,7 @@ public class TimerDungeon : MonoBehaviour
     {
         // Starts the timer automatically
         timerIsRunning = true;
-
+        text.color = Color.red;
         TimeRemaining = time;
 
     
