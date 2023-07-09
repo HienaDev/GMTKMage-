@@ -35,6 +35,8 @@ public class PlayerMove : MonoBehaviour
     private float colliderCrouchedOffset = -5f;
     private float colliderCrouchedSize = 17.6f;
 
+    private PlayerSounds playerSounds;
+
     private bool dead = false;
     private bool deadAndOver = false;
 
@@ -91,6 +93,7 @@ public class PlayerMove : MonoBehaviour
         {
             dead = true;
             animator.SetTrigger("Death");
+            playerSounds.playDeath();
             StartCoroutine(Death());
         }
 
@@ -164,6 +167,7 @@ public class PlayerMove : MonoBehaviour
             rb.gravityScale = jumpGravity;
             leftGround = Time.time - coyoteTime;
             nJumps--;
+            playerSounds.playJump();
         }
         else if (Input.GetButton("Jump") && ((Time.time - lastJumpTime) <= jumpMaxTime) && currentVelocity.y > 0 && !dead)
         {
@@ -178,6 +182,7 @@ public class PlayerMove : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) && canDash && !dead)// && Grounded)
         {
             animator.SetTrigger("Roll");
+            playerSounds.playDash();
             StartCoroutine(Dash());
         }
 
@@ -295,6 +300,7 @@ public class PlayerMove : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Health -= damage;
+        playerSounds.playHit();
         StartCoroutine(FlashPlayer());
     }
 
@@ -361,6 +367,8 @@ public class PlayerMove : MonoBehaviour
 
         defaultSpeed = moveSpeed;
         animator = GetComponentInChildren<Animator>();
+
+        playerSounds = GetComponent<PlayerSounds>();
 
         Health = health;
 
