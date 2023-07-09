@@ -14,6 +14,8 @@ public class TimerDungeon : MonoBehaviour
     public float TimeRemaining { get; private set; }
     private bool timerIsRunning = false;
 
+    private bool colored = true;
+
     void Start()
     {
 
@@ -29,6 +31,16 @@ public class TimerDungeon : MonoBehaviour
     {
         if (timerIsRunning)
         {
+            if (TimeRemaining < 4)
+            {
+                colored = !colored;
+            }
+
+            if (colored)
+                text.color = Color.red;
+            else
+                text.color = Color.white;
+
             if (TimeRemaining > 0)
             {
                 TimeRemaining -= Time.deltaTime;
